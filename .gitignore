@@ -1,0 +1,10 @@
+# Source data files (do not publish)
+*.csv
+*.xlsx
+*.xls
+*.pdf
+
+# Editor / OS files
+.vscode/
+.DS_Store
+Thumbs.db
