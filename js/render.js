@@ -11,7 +11,7 @@ async function initPrayerTimes() {
   const todayKey = formatLocalDateKey();
   const today = data[todayKey];
 
-  const hijriEl = document.getElementById("hijriDate");
+const hijriEl = document.getElementById("hijriDate");
 
 if (hijriEl && typeof hijriData !== "undefined") {
   hijriEl.innerText =
@@ -19,6 +19,7 @@ if (hijriEl && typeof hijriData !== "undefined") {
       ? hijriData[todayKey]
       : "Tarikh Hijri tertakluk kepada pengumuman rasmi";
 }
+
 
   if (!today) {
     console.warn("No data for today:", todayKey);
@@ -147,7 +148,9 @@ const info = getNextPrayerInfo(todayData);
 if (info) {
   nameEl.innerText = info.name;
   timeEl.innerText = info.time;
-  cdEl.innerText   = `· ${info.hours}j ${info.minutes}m lagi`;
+  cdEl.innerText   = info.hours > 0
+  ? `${info.hours}j ${info.minutes}m lagi`
+  : `${info.minutes}m lagi`;
 } else {
   nameEl.innerText = "Subuh";
   timeEl.innerText = "Esok";

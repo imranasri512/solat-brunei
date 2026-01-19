@@ -1,27 +1,27 @@
 function updateClock() {
   const now = new Date();
 
-  document.getElementById("clock").innerText =
-    now.toLocaleTimeString("en-GB", { hour12: true });
+  const clockEl = document.getElementById("clock");
+  const dateEl = document.getElementById("dateText");
 
-  document.getElementById("dateText").innerText =
-    now.toLocaleDateString("ms-MY", {
+  if (clockEl) {
+    clockEl.innerText = now.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true
+    });
+  }
+
+  if (dateEl) {
+    dateEl.innerText = now.toLocaleDateString("ms-MY", {
       weekday: "long",
       day: "numeric",
       month: "long",
       year: "numeric"
     });
-
-  // Hijri date
-  const hijri = hijriData[todayKey];
-  document.getElementById("hijriDate").innerText =
-    now.toLocaleDateString("ms-MY-u-ca-islamic", {
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    });
+  }
 }
 
-
-setInterval(updateClock, 1000);
 updateClock();
+setInterval(updateClock, 1000);
