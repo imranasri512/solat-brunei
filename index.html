@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <title>Waktu Solat Brunei</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="top-bar">
+  🕌 Waktu Solat Brunei
+</header>
+
+<section class="hero">
+  <div class="hero-bg bg-1"></div>
+  <div class="hero-bg bg-2"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="date" id="dateText"></div>
+    <div class="hijri-date" id="hijriDate"></div>
+
+    <div class="hero-center">
+      <div class="clock" id="clock">--:--:--</div>
+      <div class="main-countdown" id="mainCountdown"></div>
+      <div class="countdown" id="countdown"></div>
+    </div>
+    
+
+    <div class="location">Brunei Darussalam</div>
+    <div class="subtitle">Waktu Solat Rasmi · Berdasarkan Jadual KHEU</div>
+
+    <div class="prayer-row" id="todayPrayer"></div>
+
+    <div class="subtitle">Tutong: + 1 minit</div>
+    <div class="subtitle">Belait: + 3 minit</div>
+  </div>
+</section>
+
+<section class="monthly">
+  <h2>Jadual Waktu Solat Bulanan</h2>
+  <div class="table-wrapper">
+    <table id="monthlyTable">
+      <thead>
+        <tr>
+          <th>Tarikh</th>
+          <th>Imsak</th>
+          <th>Subuh</th>
+          <th>Syuruk</th>
+          <th>Dhuha</th>
+          <th>Zohor</th>
+          <th>Asar</th>
+          <th>Maghrib</th>
+          <th>Isyak</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<div class="mobile-prayer-bar" id="mobilePrayerBar">
+  <span class="mpb-label">Seterusnya</span>
+  <span class="mpb-name" id="mpbName">—</span>
+  <span class="mpb-time" id="mpbTime">—</span>
+  <span class="mpb-countdown" id="mpbCountdown"></span>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-content">
+
+    <p class="footer-disclaimer">
+      Laman web ini disediakan untuk rujukan sahaja.<br>
+      Sebarang perubahan rasmi adalah tertakluk kepada pengumuman pihak berkuasa.
+    </p>
+
+    <p class="footer-source">
+      Waktu solat adalah berdasarkan jadual rasmi
+      Kementerian Hal Ehwal Ugama (KHEU), Brunei Darussalam.
+    </p>
+
+    <p class="footer-credits">
+      Imej latar masjid:<br>
+      Masjid Sultan Omar Ali Saifuddien — Foto oleh
+      <a href="https://www.flickr.com/photos/samgarza/" target="_blank" rel="noopener">
+        Sam Garza
+      </a> (Flickr).<br>
+      Masjid Jame’ Asr Hassanal Bolkiah — Foto oleh
+      <a href="https://www.flickr.com/photos/jorgels/" target="_blank" rel="noopener">
+        Jorge Láscar
+      </a> (Flickr).
+    </p>
+
+    <p class="footer-copyright">
+      © 2026 Imran Asri. Hak cipta terpelihara.
+    </p>
+
+  </div>
+</footer>
+
+<!-- SCRIPTS (ORDER MATTERS) -->
+<script src="js/clock.js"></script>
+<script src="js/load-prayer-data.js"></script>
+<script src="js/hijri-data.js"></script>
+<script src="js/render.js"></script>
+<script src="js/background.js"></script>
+
+</body>
+</html>

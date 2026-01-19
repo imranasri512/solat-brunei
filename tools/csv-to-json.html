@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+<input type="file" id="file">
+<pre id="output"></pre>
+
+<script>
+document.getElementById("file").addEventListener("change", e => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    const lines = reader.result.trim().split("\n");
+    const headers = lines[0].split(",");
+
+    const data = {};
+
+    for (let i = 1; i < lines.length; i++) {
+      const values = lines[i].split(",");
+      const row = {};
+
+      headers.forEach((h, idx) => row[h.trim()] = values[idx].trim());
+      data[row.Date] = row;
+    }
+
+    document.getElementById("output").textContent =
+      JSON.stringify(data, null, 2);
+  };
+
+  reader.readAsText(file);
+});
+</script>
+</body>
+</html>
