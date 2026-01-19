@@ -181,7 +181,17 @@ footer {
   align-items: center;
   justify-content: center;
   padding-top: 60px;
+  z-index: 1;
 }
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 2;
+}
+
 
 .hero::after {
   content: "";
@@ -451,9 +461,11 @@ body.night .prayer-box {
 
 /* Ensure zone offset text is readable on mobile */
 .zone-offsets {
+  position: relative;
   color: rgba(255, 255, 255, 0.9);
   opacity: 1; /* override inherited fade */
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  z-index: 3;
 }
 
 /* About page */
