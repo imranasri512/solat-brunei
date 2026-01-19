@@ -449,6 +449,158 @@ body.night .prayer-box {
   transition: opacity 0.3s ease;
 }
 
+/* About page */
+.about-page {
+  background: #111;
+  color: rgba(255, 255, 255, 0.9);
+}
 
+.about-content {
+  max-width: 720px;
+  margin: 80px auto 120px;
+  padding: 0 20px;
+  line-height: 1.7;
+}
 
+.about-content h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.about-content h2 {
+  font-size: 20px;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.about-content p {
+  margin-bottom: 14px;
+}
+
+.about-content a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: underline;
+}
+
+.about-note {
+  opacity: 0.8;
+  font-size: 14px;
+  margin-top: 24px;
+}
+
+/* =========================
+   About Page Styling
+========================= */
+
+.about-page {
+  background: #111;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Hero */
+.about-hero {
+  position: relative;
+  padding: 100px 20px 80px;
+  text-align: center;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.5),
+    rgba(17,17,17,1)
+  );
+}
+
+.about-hero-content h1 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.about-hero-content p {
+  opacity: 0.8;
+  font-size: 16px;
+}
+
+/* Content wrapper */
+.about-wrapper {
+  padding: 40px 20px 120px;
+}
+
+.about-card {
+  max-width: 760px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 32px 28px;
+  backdrop-filter: blur(6px);
+}
+
+/* Sections */
+.about-card section + section {
+  margin-top: 28px;
+}
+
+.about-card h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.about-card p {
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+
+/* Contact */
+.contact-email {
+  font-size: 16px;
+}
+
+.contact-email a {
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: underline;
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+  .about-hero {
+    padding: 80px 16px 60px;
+  }
+
+  .about-hero-content h1 {
+    font-size: 24px;
+  }
+
+  .about-card {
+    padding: 24px 20px;
+  }
+}
+
+/* About page top bar */
+.about-top-bar {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+/* Back to home button */
+.back-home {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 14px;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.back-home:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.back-home:active {
+  transform: translateY(1px);
+}
+
+.back-home::before {
+  content: "🏠";
+  margin-right: 6px;
+}
 
