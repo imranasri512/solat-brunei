@@ -449,6 +449,13 @@ body.night .prayer-box {
   transition: opacity 0.3s ease;
 }
 
+/* Ensure zone offset text is readable on mobile */
+.zone-offsets {
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 1; /* override inherited fade */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
 /* About page */
 .about-page {
   background: #111;
