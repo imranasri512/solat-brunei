@@ -1,3 +1,30 @@
+/* =========================
+   Utilities
+========================= */
+
+function renderDates(todayKey) {
+  const dateEl = document.getElementById("dateText");
+  const hijriEl = document.getElementById("hijriDate");
+
+  if (dateEl) {
+    const now = new Date();
+    dateEl.innerText = now.toLocaleDateString("ms-MY", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  }
+
+  if (hijriEl && typeof hijriData !== "undefined") {
+    hijriEl.innerText =
+      hijriData[todayKey]
+        ? hijriData[todayKey]
+        : "Tarikh Hijri tertakluk kepada pengumuman rasmi";
+  }
+}
+
+
 function formatLocalDateKey() {
   const now = new Date();
   const y = now.getFullYear();
@@ -6,63 +33,107 @@ function formatLocalDateKey() {
   return `${y}-${m}-${d}`;
 }
 
-async function initPrayerTimes() {
-  const data = await loadPrayerData();
-  const todayKey = formatLocalDateKey();
-  const today = data[todayKey];
+function timeToMinutes(t) {
+  const [h, m] = t.split(":").map(Number);
+  return h * 60 + m;
+}
 
-const hijriEl = document.getElementById("hijriDate");
+/* =========================
+   Next Prayer (SECONDS)
+========================= */
+function getNextPrayerDate(todayData) {
+  const now = new Date();
+  const order = ["Imsak","Subuh","Syuruk","Dhuha","Zohor","Asar","Maghrib","Isyak"];
 
-if (hijriEl && typeof hijriData !== "undefined") {
-  hijriEl.innerText =
-    hijriData[todayKey]
-      ? hijriData[todayKey]
-      : "Tarikh Hijri tertakluk kepada pengumuman rasmi";
+  for (const name of order) {
+    const t = todayData[name];
+    if (!t) continue;
+
+    const [h, m] = t.split(":").map(Number);
+    const d = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      h, m, 0
+    );
+
+    if (d > now) {
+      return { name, time: t, date: d };
+    }
+  }
+
+  // After Isyak → Subuh tomorrow
+  const [h, m] = todayData.Subuh.split(":").map(Number);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  tomorrow.setHours(h, m, 0, 0);
+
+  return { name: "Subuh", time: todayData.Subuh, date: tomorrow };
 }
 
 
-  if (!today) {
-    console.warn("No data for today:", todayKey);
+// Update hero section next prayer info
+function updateHeroNextPrayer(todayData) {
+  if (!todayData) return;
+
+  const nameEl = document.getElementById("nextPrayerName");
+  const timeEl = document.getElementById("nextPrayerTime");
+  const cdEl   = document.getElementById("nextPrayerCountdown");
+
+  if (!nameEl || !timeEl || !cdEl) return;
+
+  const next = getNextPrayerDate(todayData);
+  const diffSeconds = Math.floor((next.date - new Date()) / 1000);
+  const diffMinutes = Math.ceil(diffSeconds / 60);
+
+  nameEl.innerText = next.name;
+  timeEl.innerText = `at ${next.time}`;
+
+  if (diffMinutes <= 0) {
+    cdEl.innerText = "NOW";
     return;
   }
 
-  renderToday(today);
-  renderMonthly(data);
-  HighlightTodayRow();
-  updatePrayerState(today);
-  applyDayNightMode(today);
-  updateMobilePrayerBar(today);
-  updateMainCountdown(today);
+  if (diffMinutes >= 60) {
+    const hours = Math.floor(diffMinutes / 60);
+    const minutes = diffMinutes % 60;
 
-  // Update prayer state every minute
-  setInterval(() => {
-    updatePrayerState(today);
-    updateMobilePrayerBar(today);
-    updateMainCountdown(today);
-  }, 60000);
-
-  setInterval(() => applyDayNightMode(today), 30000);
+    cdEl.innerText = minutes > 0
+      ? `in ${hours} Hour${hours > 1 ? "s" : ""} ${minutes} Minutes`
+      : `IN ${hours} Hour${hours > 1 ? "s" : ""}`;
+  } else {
+    cdEl.innerText = `IN ${diffMinutes} MINUTES`;
+  }
 }
 
-function renderToday(d) {
-  const order = ["Imsak","Subuh","Syuruk","Dhuha","Zohor","Asar","Maghrib","Isyak"];
+// Load prayer data from JSON file
+function renderToday(today) {
   const el = document.getElementById("todayPrayer");
+  if (!el) return;
+
+  const order = ["Imsak","Subuh","Syuruk","Dhuha","Zohor","Asar","Maghrib","Isyak"];
   el.innerHTML = "";
 
   order.forEach(name => {
-    if (!d[name]) return;
+    if (!today[name]) return;
+
     const secondary = ["Imsak","Syuruk","Dhuha"].includes(name);
+
     el.innerHTML += `
       <div class="prayer-box ${secondary ? "secondary" : ""}">
-        <strong>${d[name]}</strong>
+        <strong>${today[name]}</strong>
         <span>${name}</span>
       </div>
     `;
   });
 }
 
+
+// Render monthly prayer times table
 function renderMonthly(data) {
   const tbody = document.querySelector("#monthlyTable tbody");
+  if (!tbody) return;
+
   tbody.innerHTML = "";
 
   Object.values(data).forEach(d => {
@@ -82,197 +153,87 @@ function renderMonthly(data) {
   });
 }
 
-function HighlightTodayRow() {
+// Highlight today's row in the monthly table
+function highlightTodayRow() {
   const todayKey = formatLocalDateKey();
   const row = document.querySelector(`tr[data-date="${todayKey}"]`);
-
-  if (row) {
-    row.classList.add("today");}
-  }
-
-  function applyDayNightMode(todayData) {
-  if (!todayData || !todayData.Maghrib) return;
-
-  const now = new Date();
-  const nowMin = now.getHours() * 60 + now.getMinutes();
-
-  const [mh, mm] = todayData.Maghrib.split(":").map(Number);
-  const maghribMin = mh * 60 + mm;
-
-  if (nowMin >= maghribMin) {
-    document.body.classList.add("night");
-  } else {
-    document.body.classList.remove("night");
-  }
+  if (row) row.classList.add("today");
 }
 
-function getNextPrayerInfo(todayData) {
+function getNextPrayerInfo(today) {
   const now = new Date();
   const nowMin = now.getHours() * 60 + now.getMinutes();
-
   const order = ["Imsak","Subuh","Syuruk","Dhuha","Zohor","Asar","Maghrib","Isyak"];
 
-  for (let i = 0; i < order.length; i++) {
-    const t = todayData[order[i]];
+  for (const name of order) {
+    const t = today[name];
     if (!t) continue;
 
-    const [h, m] = t.split(":").map(Number);
-    const prayerMin = h * 60 + m;
-
-    if (prayerMin > nowMin) {
-      const diff = prayerMin - nowMin;
+    const min = timeToMinutes(t);
+    if (min > nowMin) {
+      const diff = min - nowMin;
       return {
-        name: order[i],
+        name,
         time: t,
-        hours: Math.floor(diff / 60),
-        minutes: diff % 60
+        minutes: diff
       };
     }
   }
 
-  return null; // after Isyak
+  return { name: "Subuh", time: "Esok", minutes: null };
 }
 
-function updateMobilePrayerBar(todayData) {
-  const bar = document.getElementById("mobilePrayerBar");
-  if (!bar || !todayData) return;
-
+// Update mobile prayer bar
+function updateMobilePrayerBar(today) {
   const nameEl = document.getElementById("mpbName");
   const timeEl = document.getElementById("mpbTime");
   const cdEl   = document.getElementById("mpbCountdown");
 
   if (!nameEl || !timeEl || !cdEl) return;
 
-const info = getNextPrayerInfo(todayData);
+  const info = getNextPrayerInfo(today);
 
-if (info) {
   nameEl.innerText = info.name;
   timeEl.innerText = info.time;
-  cdEl.innerText   = info.hours > 0
-  ? `${info.hours}j ${info.minutes}m lagi`
-  : `${info.minutes}m lagi`;
-} else {
-  nameEl.innerText = "Subuh";
-  timeEl.innerText = "Esok";
-  cdEl.innerText   = "";
-  }
-}
 
-const footer = document.querySelector(".site-footer");
-const mobileBar = document.getElementById("mobilePrayerBar");
-
-if (footer && mobileBar) {
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      mobileBar.style.opacity = entry.isIntersecting ? "0" : "1";
-      mobileBar.style.pointerEvents = entry.isIntersecting ? "none" : "auto";
-    },
-    { threshold: 0.1 }
-  );
-
-  observer.observe(footer);
-}
-
-
-    
-    // Delay ensures table is rendered first
- /*   setTimeout(() => {
-      row.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-    }, 300);
-  }
-} */
-
-/* SCROLL LISTENER (FIXED – SINGLE INSTANCE) */
-window.addEventListener("scroll", () => {
-  document.querySelector(".top-bar")
-    .classList.toggle("scrolled", window.scrollY > 20);
-});
-
-function timeToMinutes(t) {
-  const [h, m] = t.split(":").map(Number);
-  return h * 60 + m;
-}
-
-function updatePrayerState(todayData) {
-  const now = new Date();
-  const nowMin = now.getHours() * 60 + now.getMinutes();
-
-  const order = ["Imsak","Subuh","Syuruk","Dhuha","Zohor","Asar","Maghrib","Isyak"];
-  let current = null;
-  let next = null;
-
-  for (let i = 0; i < order.length; i++) {
-    const t = todayData[order[i]];
-    if (!t) continue;
-
-    const thisMin = timeToMinutes(t);
-    const nextMin = order[i + 1] ? timeToMinutes(todayData[order[i + 1]]) : null;
-
-    if (nowMin >= thisMin && (nextMin === null || nowMin < nextMin)) {
-      current = order[i];
-      next = order[i + 1];
-      break;
-    }
-  }
-
-  function updateCountdown(todayData) {
-  const now = new Date();
-  const nowMin = now.getHours() * 60 + now.getMinutes();
-
-  const order = ["Imsak","Subuh","Syuruk","Dhuha","Zohor","Asar","Maghrib","Isyak"];
-
-  for (let i = 0; i < order.length; i++) {
-    const t = todayData[order[i]];
-    if (!t) continue;
-
-    const [h, m] = t.split(":").map(Number);
-    const prayerMin = h * 60 + m;
-
-    if (prayerMin > nowMin) {
-      const diff = prayerMin - nowMin;
-      const hh = Math.floor(diff / 60);
-      const mm = diff % 60;
-
-      document.getElementById("countdown").innerText =
-        `Seterusnya: ${order[i]} · ${hh}j ${mm}m lagi`;
-      return;
-    }
-  }
-
-  // After Isyak
-  document.getElementById("countdown").innerText =
-    "Menunggu Subuh esok";
-}
-
-
-  document.querySelectorAll(".prayer-box").forEach(box => {
-    box.classList.remove("active", "next");
-
-    if (box.querySelector("span").innerText === current) {
-      box.classList.add("active");
-    }
-    if (box.querySelector("span").innerText === next) {
-      box.classList.add("next");
-    }
-  });
-}
-
-function updateMainCountdown(todayData) {
-  const el = document.getElementById("mainCountdown");
-  if (!el) return;
-
-  const info = getNextPrayerInfo(todayData);
-
-  if (info) {
-    el.innerText = `${info.name} · ${info.hours}j ${info.minutes}m lagi`;
+  if (info.minutes !== null) {
+    cdEl.innerText = `${info.minutes}m lagi`;
   } else {
-    el.innerText = "Menunggu Subuh esok";
+    cdEl.innerText = "";
   }
 }
 
+// Apply day/night mode based on Maghrib time
+function applyDayNightMode(today) {
+  if (!today.Maghrib) return;
 
+  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+  const maghribMin = timeToMinutes(today.Maghrib);
+
+  document.body.classList.toggle("night", nowMin >= maghribMin);
+}
+
+/* =========================
+   Init
+========================= */
+async function initPrayerTimes() {
+  const data = await loadPrayerData();
+  const todayKey = formatLocalDateKey();
+  const today = data[todayKey];
+  if (!today) return;
+
+  renderDates(todayKey);
+  renderToday(today);
+  renderMonthly(data);
+  highlightTodayRow();
+
+  updateHeroNextPrayer(today);
+  updateMobilePrayerBar(today);
+  applyDayNightMode(today);
+
+  setInterval(() => updateHeroNextPrayer(today), 1000);
+  setInterval(() => updateMobilePrayerBar(today), 60000);
+  setInterval(() => applyDayNightMode(today), 30000);
+}
 
 initPrayerTimes();
