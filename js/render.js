@@ -87,7 +87,7 @@ function updateHeroNextPrayer(todayData) {
   const diffMinutes = Math.ceil(diffSeconds / 60);
 
   nameEl.innerText = next.name;
-  timeEl.innerText = `at ${next.time}`;
+  timeEl.innerText = `dalam jam ${next.time}`;
 
   if (diffMinutes <= 0) {
     cdEl.innerText = "NOW";
@@ -99,10 +99,10 @@ function updateHeroNextPrayer(todayData) {
     const minutes = diffMinutes % 60;
 
     cdEl.innerText = minutes > 0
-      ? `in ${hours} Hour${hours > 1 ? "s" : ""} ${minutes} Minutes`
-      : `IN ${hours} Hour${hours > 1 ? "s" : ""}`;
+      ? `dalam ${hours} Jam ${minutes} Minit`
+      : `DALAM ${hours} Jam`;
   } else {
-    cdEl.innerText = `IN ${diffMinutes} MINUTES`;
+    cdEl.innerText = `DALAM ${diffMinutes} MINIT`;
   }
 }
 
