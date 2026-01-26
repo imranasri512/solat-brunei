@@ -128,6 +128,24 @@ function renderToday(today) {
   });
 }
 
+// Render a random hadith (daily)
+function renderDailyHadith(todayKey) {
+  if (typeof hadithList === "undefined") return;
+
+  const textEl = document.getElementById("hadithText");
+  const sourceEl = document.getElementById("hadithSource");
+
+  if (!textEl || !sourceEl) return;
+
+  // Convert YYYY-MM-DD → number (simple, stable)
+  const seed = parseInt(todayKey.replace(/-/g, ""), 10);
+  const index = seed % hadithList.length;
+
+  const hadith = hadithList[index];
+
+  textEl.innerText = hadith.text;
+  sourceEl.innerText = hadith.source;
+}
 
 // Render monthly prayer times table
 function renderMonthly(data) {
@@ -223,6 +241,8 @@ async function initPrayerTimes() {
   if (!today) return;
 
   renderDates(todayKey);
+  renderDailyHadith(todayKey);
+  
   renderToday(today);
   renderMonthly(data);
   highlightTodayRow();
