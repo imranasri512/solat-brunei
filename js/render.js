@@ -87,7 +87,7 @@ function updateHeroNextPrayer(todayData) {
   const diffMinutes = Math.ceil(diffSeconds / 60);
 
   nameEl.innerText = next.name;
-  timeEl.innerText = `dalam jam ${next.time}`;
+  timeEl.innerText = `pada jam ${next.time}`;
 
   if (diffMinutes <= 0) {
     cdEl.innerText = "NOW";
