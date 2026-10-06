@@ -12,7 +12,9 @@ The website is designed to be easy to read at a glance, with a live clock, count
 
 - ⏰ **Live clock** (Brunei time)
 - 🕋 **Next prayer countdown**
-- 📅 **Monthly prayer timetable**
+- 📅 **Monthly prayer timetable** with a month selector (and a print view)
+- 🗓️ **Upcoming Islamic events** (dates beyond the Hijri data are marked as estimates)
+- 🔔 **Prayer time notifications** (while the site is open or installed to the home screen)
 - 📱 **Mobile-first responsive design**
 - 🌙 **Includes Dhuha prayer time**
 - 📍 **Regional offsets** (Tutong +1 min, Belait +3 min)
@@ -71,6 +73,17 @@ This project uses **continuous deployment**:
 - Changes are committed to GitHub
 - Cloudflare Pages automatically builds and deploys the site
 - No manual uploads required
+
+---
+
+## 🗂️ Adding a new year of data
+
+1. Add `data/YYYY-MM.json` files with **zero-padded** date keys (`"2027-01-01"`).
+2. Add the matching Hijri dates to `js/hijri-data.js`.
+3. Update `PRAYER_DATA_RANGE` at the top of `js/load-prayer-data.js` so the month selector includes the new months.
+
+Upcoming events use `js/hijri-data.js` where it has the dates and fall back to an
+estimate afterwards, so they become exact automatically once the Hijri data is added.
 
 ---
 
