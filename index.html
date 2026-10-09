@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Waktu Solat Brunei</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Waktu solat harian dan bulanan untuk Brunei Darussalam berdasarkan jadual rasmi KHEU, bersama acara Islam akan datang dan notifikasi waktu solat." />
 
   <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -13,64 +12,13 @@
 
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon.png">
-  <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#111111">
 
 </head>
 <body>
 
-<header class="top-bar" id="top">
-  <div class="top-bar-inner">
-    <a class="brand" href="#top">🕌 Waktu Solat<span class="brand-extra"> Brunei</span></a>
-
-    <nav class="top-nav" aria-label="Navigasi utama">
-      <a href="#jadual">Jadual</a>
-      <a href="#acara">Acara</a>
-      <button type="button" class="bell-btn" id="notifBtn" aria-label="Tetapan notifikasi" aria-expanded="false" aria-controls="notifPanel">
-        <span aria-hidden="true">🔔</span>
-      </button>
-    </nav>
-  </div>
-
-  <div class="notif-panel" id="notifPanel" role="dialog" aria-label="Tetapan notifikasi" hidden>
-    <h2>Notifikasi waktu solat</h2>
-    <p class="notif-status" id="notifStatus">Belum aktif.</p>
-
-    <label class="notif-row notif-main">
-      <input type="checkbox" id="notifEnabled" />
-      <span>Aktifkan notifikasi</span>
-    </label>
-
-    <fieldset class="notif-prayers" id="notifPrayers">
-      <legend>Maklumkan saya untuk</legend>
-      <label><input type="checkbox" value="Imsak" /> Imsak</label>
-      <label><input type="checkbox" value="Subuh" /> Subuh</label>
-      <label><input type="checkbox" value="Syuruk" /> Syuruk</label>
-      <label><input type="checkbox" value="Dhuha" /> Dhuha</label>
-      <label><input type="checkbox" value="Zohor" /> Zohor</label>
-      <label><input type="checkbox" value="Asar" /> Asar</label>
-      <label><input type="checkbox" value="Maghrib" /> Maghrib</label>
-      <label><input type="checkbox" value="Isyak" /> Isyak</label>
-    </fieldset>
-
-    <label class="notif-row notif-lead">
-      <span>Bila</span>
-      <select id="notifLead">
-        <option value="0">Tepat pada waktunya</option>
-        <option value="5">5 minit sebelum</option>
-        <option value="10">10 minit sebelum</option>
-        <option value="15">15 minit sebelum</option>
-        <option value="30">30 minit sebelum</option>
-      </select>
-    </label>
-
-    <button type="button" class="btn" id="notifTest" disabled>Uji notifikasi</button>
-
-    <p class="notif-note">
-      Notifikasi dipaparkan semasa laman ini dibuka di pelayar atau dipasang pada skrin utama.
-      Pelayar tidak membenarkan notifikasi apabila laman ditutup sepenuhnya.
-    </p>
-  </div>
+<header class="top-bar">
+  🕌 Waktu Solat Brunei
 </header>
 
 <section class="hero">
@@ -91,14 +39,16 @@
         <div class="next-label">Waktu Solat Seterusnya</div>
         <div class="next-name" id="nextPrayerName">—</div>
 
-        <div class="next-countdown" id="nextPrayerCountdown">
-          dalam —
-        </div>
+    <div class="next-countdown" id="nextPrayerCountdown">
+      DALAM —
+    </div>
         <div class="next-time" id="nextPrayerTime">
           -
         </div>
       </div>
+
     </div>
+    
 
     <div class="location">Brunei Darussalam</div>
     <div class="subtitle">Waktu Solat Rasmi · Berdasarkan Jadual KHEU</div>
@@ -121,60 +71,25 @@
   </div>
 </section>
 
-<section class="monthly" id="jadual">
-  <div class="section-inner">
-    <div class="section-head">
-      <div>
-        <h2>Jadual Waktu Solat Bulanan</h2>
-        <p class="section-sub">Pilih bulan untuk melihat jadual penuh.</p>
-        <p class="print-only" id="printMonth"></p>
-      </div>
-
-      <div class="month-controls">
-        <button type="button" class="icon-btn" id="monthPrev" aria-label="Bulan sebelumnya">‹</button>
-        <select id="monthSelect" class="select" aria-label="Pilih bulan"></select>
-        <button type="button" class="icon-btn" id="monthNext" aria-label="Bulan seterusnya">›</button>
-        <button type="button" class="btn btn-ghost" id="printBtn">Cetak</button>
-      </div>
-    </div>
-
-    <div class="table-wrapper" id="tableWrapper">
-      <table id="monthlyTable">
-        <thead>
-          <tr>
-            <th>Tarikh</th>
-            <th>Imsak</th>
-            <th>Subuh</th>
-            <th>Syuruk</th>
-            <th>Dhuha</th>
-            <th>Zohor</th>
-            <th>Asar</th>
-            <th>Maghrib</th>
-            <th>Isyak</th>
-            <th>Hijri</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section class="events" id="acara">
-  <div class="section-inner">
-    <div class="section-head">
-      <div>
-        <h2>Acara Islam Akan Datang</h2>
-        <p class="section-sub">Tarikh bertanda <em>Anggaran</em> dikira secara anggaran dan boleh berubah.</p>
-      </div>
-    </div>
-
-    <div class="events-grid" id="eventsList"></div>
-
-    <p class="events-note">
-      Permulaan Ramadan, Syawal dan Zulhijah ditentukan melalui pengumuman rasmi
-      rukyah di Brunei Darussalam. Sila rujuk pengumuman pihak berkuasa.
-    </p>
+<section class="monthly">
+  <h2>Jadual Waktu Solat Bulanan</h2>
+  <div class="table-wrapper">
+    <table id="monthlyTable">
+      <thead>
+        <tr>
+          <th>Tarikh</th>
+          <th>Imsak</th>
+          <th>Subuh</th>
+          <th>Syuruk</th>
+          <th>Dhuha</th>
+          <th>Zohor</th>
+          <th>Asar</th>
+          <th>Maghrib</th>
+          <th>Isyak</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 </section>
 
@@ -223,8 +138,6 @@
 <script src="js/load-prayer-data.js"></script>
 <script src="js/hijri-data.js"></script>
 <script src="js/hadith-data.js"></script>
-<script src="js/events.js"></script>
-<script src="js/notifications.js"></script>
 <script src="js/render.js"></script>
 <script src="js/background.js"></script>
 
