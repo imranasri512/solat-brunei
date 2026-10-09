@@ -334,13 +334,6 @@ body {
   z-index: 1;
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  z-index: 2;
-}
 
 .hero::after {
   content: "";
@@ -374,13 +367,17 @@ body {
   opacity: 1;
 }
 
+/* Dims the mosque photo so the text on top stays readable. Darker after Maghrib. */
 .hero-overlay {
-  background: rgba(0, 0, 0, 0.45);
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.56);
   transition: background 0.6s ease;
 }
 
 body.night .hero-overlay {
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.68);
 }
 
 .hero-content {
@@ -509,12 +506,30 @@ body.night .hero-content {
 }
 
 /* Today's prayer boxes */
+/* Flex + centered, so a short last row (like Maghrib and Isyak on a phone) sits in the middle.
+   Phone: 3 per row. Tablet: 4 per row (two even rows). Wide: all 8 in one row. */
 .prayer-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
-  gap: 10px;
+  --gap: 10px;
+  --per-row: 3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
   max-width: 880px;
   margin: 30px auto 0;
+}
+
+.prayer-row .prayer-box {
+  flex: 0 0 calc((100% - var(--gap) * (var(--per-row) - 1)) / var(--per-row));
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .prayer-row { --per-row: 4; }
+}
+
+@media (min-width: 900px) {
+  .prayer-row { --per-row: 8; }
 }
 
 .prayer-box {
